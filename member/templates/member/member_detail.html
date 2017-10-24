@@ -1,0 +1,10 @@
+{% extends 'member/layout.html' %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-12">
+        <h2>{{ member.name }}, {{ member.first_name }}</h2>
+        <p>{{ member.birth_date }}</p>
+    </div>
+</div>
+{% endblock %}

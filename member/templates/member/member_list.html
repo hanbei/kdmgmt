@@ -1,0 +1,44 @@
+{% extends 'member/layout.html' %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-12">
+        <h1>Members</h1>
+    </div>
+    <div class="col-md-12">
+        <table class="table col-md-12 table-striped">
+            <tr>
+                <th class="col-md-1">Name</th>
+                <th class="col-md-1">Birthdate</th>
+                <th class="col-md-1">Gender</th>
+                <th class="col-md-1">Grade</th>
+                <th class="col-md-1">Email</th>
+                <th class="col-md-1">Club</th>
+                <th class="col-md-1">Zekken</th>
+                <th class="col-md-1">Jacket</th>
+                <th class="col-md-1">Joindate</th>
+            </tr>
+            {% if members %}
+            {% for member in members %}
+            <tr>
+                <td class="col-md-1"><a href="{% url 'member:detail' member.id %}">{{ member.name }}
+                    {{ member.first_name }}</a></td>
+                <td class="col-md-1">{{ member.birth_date }}</td>
+                <td class="col-md-1">{{ member.gender }}</td>
+                <td class="col-md-1">{{ member.grade }}</td>
+                <td class="col-md-1">{{ member.email }}</td>
+                <td class="col-md-1">{{ member.club }}</td>
+                <td class="col-md-1"><input name="checkbox_name" id="zekken" type="checkbox" disabled="disabled"
+                                            {% if member.zekken %} checked="checked"{% endif %}></td>
+                <td class="col-md-1"><input name="checkbox_name" id="jacket" type="checkbox" disabled="disabled"
+                                            {% if member.jacket %} checked="checked"{% endif %}></td>
+                <td class="col-md-1">{{ member.joined }}</td>
+            </tr>
+            {% endfor %}
+            {% else %}
+            <p>No members are available.</p>
+            {% endif %}
+        </table>
+    </div>
+</div>
+{% endblock %}

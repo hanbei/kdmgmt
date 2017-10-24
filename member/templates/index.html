@@ -1,9 +1,0 @@
-{% if members %}
-<ul>
-    {% for member in members %}
-    <li><a href="{% url 'member:detail' member.id  %}">{{ member.name }}</a></li>
-    {% endfor %}
-</ul>
-{% else %}
-<p>Nothing here.</p>
-{% endif %}

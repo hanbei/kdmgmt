@@ -7,7 +7,7 @@ from .models import Member
 
 
 class ListView(generic.ListView):
-    template_name = 'index.html'
+    template_name = 'member/member_list.html'
     context_object_name = 'members'
 
     def get_queryset(self):
@@ -16,4 +16,4 @@ class ListView(generic.ListView):
 
 class DetailView(generic.DetailView):
     model = Member
-    template_name = 'details.html'
+    template_name = 'member/member_detail.html'

@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+{# Load the tag library #}
+{% load bootstrap3 %}
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {% bootstrap_javascript jquery=1%}
+    {# Load CSS and JavaScript #}
+    {% bootstrap_css %}
+</head>
+
+<body>
+<nav class="navbar navbar-default" role="navigation">
+    <div class="container-fluid" id="navfluid">
+        <div class="navbar-header">
+            <button class="navbar-toggle" data-target="#navigationbar" data-toggle="collapse" type="button">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <span class="navbar-brand"><a href="{% url 'member:index' %}" title="List">KD Manager</a></span>
+        </div>
+        <div class="navbar-collapse collapse" id="navigationbar">
+            <ul class="nav navbar-nav">
+                <li>
+                    <a href="{% url 'admin:index' %}" title="Admin">Admin</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-12">
+            {# Display django.contrib.messages as Bootstrap alerts #}
+            {% bootstrap_messages %}
+        </div>
+    </div>
+    {% block content %}
+    {% endblock %}
+</div>
+</body>
+</html>
