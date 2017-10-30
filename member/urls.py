@@ -8,4 +8,5 @@ urlpatterns = [
     url(r'^login$', views.do_login, name='login'),
     url(r'^logout/$', views.do_logout, name='logout'),
     url(r'^(?P<pk>[0-9]+)/$', views.DetailView.as_view(), name='detail'),
+    url(r'^csv/$', views.export_to_csv, name='csv_export'),
 ]

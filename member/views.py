@@ -1,11 +1,30 @@
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.http import HttpResponse
 from django.shortcuts import render, redirect
+from django.template import loader
 from django.urls import reverse, reverse_lazy
 from django.views import generic
 
 # Create your views here.
 from .models import Member
+
+
+def export_to_csv(request):
+    # Create the HttpResponse object with the appropriate CSV header.
+    response = HttpResponse(content_type='text/csv')
+    response['Content-Disposition'] = 'attachment; filename="kader.csv"'
+
+    # The data is hard-coded here, but you could load it from a database or
+    # some other source.
+    csv_data = Member.objects.order_by('name')
+
+    t = loader.get_template('member/csv.txt')
+    c = {
+        'data': csv_data,
+    }
+    response.write(t.render(c))
+    return response
 
 
 def do_login(request):
