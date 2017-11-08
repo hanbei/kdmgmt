@@ -7,17 +7,18 @@ from django.urls import reverse, reverse_lazy
 from django.views import generic
 
 # Create your views here.
-from .models import Member
+from .models import Member, Group
 
 
-def export_to_csv(request):
+def export_group_to_csv(request, group_id):
     # Create the HttpResponse object with the appropriate CSV header.
     response = HttpResponse(content_type='text/csv')
     response['Content-Disposition'] = 'attachment; filename="kader.csv"'
 
     # The data is hard-coded here, but you could load it from a database or
     # some other source.
-    csv_data = Member.objects.order_by('name')
+    group = Group.objects.get(pk=group_id)
+    csv_data = group.member_set.all().order_by('name')
 
     t = loader.get_template('member/csv.txt')
     c = {
@@ -34,7 +35,7 @@ def do_login(request):
         user = authenticate(request, username=username, password=password)
         if user is not None:
             login(request, user)
-            return redirect(reverse('member:index'))
+            return redirect(reverse('member:group_index'))
         else:
             return redirect(reverse('member:login'))
     else:
@@ -46,16 +47,30 @@ def do_logout(request):
     return redirect(reverse('member:login'))
 
 
-class ListView(LoginRequiredMixin, generic.ListView):
+class MemberListView(LoginRequiredMixin, generic.ListView):
     template_name = 'member/member_list.html'
     context_object_name = 'members'
-    login_url = reverse_lazy('member:login')  # '/login/'
+    login_url = reverse_lazy('member:login')
 
     def get_queryset(self):
         return Member.objects.order_by('name')
 
 
-class DetailView(LoginRequiredMixin, generic.DetailView):
+class MemberDetailView(LoginRequiredMixin, generic.DetailView):
     model = Member
     template_name = 'member/member_detail.html'
-    login_url = reverse_lazy('member:index')  # '/login/'
+    login_url = reverse_lazy('member:group_index')
+
+
+class GroupListView(LoginRequiredMixin, generic.ListView):
+    template_name = 'group/list.html'
+    context_object_name = 'groups'
+    login_url = reverse_lazy('member:login')
+
+    def get_queryset(self):
+        return Group.objects.order_by('name')
+
+class GroupDetailView(LoginRequiredMixin, generic.DetailView):
+    model = Group
+    template_name = 'group/detail.html'
+    login_url = reverse_lazy('member:group_index')
