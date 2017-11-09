@@ -1,0 +1,43 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-12">
+        <h2>{{ group.name }}</h2>
+    </div>
+    <div class="col-md-12 text-right">
+        <a href="{% url 'member:csv_export' group.id %}">csv</a>
+    </div>
+    <div class="col-md-12">
+        <table class="table col-md-12 table-striped">
+            <tr>
+                <th class="col-md-1">Name</th>
+                <th class="col-md-1">Birthdate</th>
+                <th class="col-md-1">Gender</th>
+                <th class="col-md-1">Grade</th>
+                <th class="col-md-1">Email</th>
+                <th class="col-md-1">Club</th>
+                <th class="col-md-1">Zekken</th>
+                <th class="col-md-1">Jacket</th>
+                <th class="col-md-1">Joindate</th>
+            </tr>
+            {% for member in group.member_set.all %}
+            <tr>
+                <td class="col-md-1"><a href="{% url 'member:detail' member.id %}">{{ member.name }}
+                    {{ member.first_name }}</a></td>
+                <td class="col-md-1">{{ member.birth_date }}</td>
+                <td class="col-md-1">{{ member.gender }}</td>
+                <td class="col-md-1">{{ member.grade }}</td>
+                <td class="col-md-1">{{ member.email }}</td>
+                <td class="col-md-1">{{ member.club }}</td>
+                <td class="col-md-1"><input name="checkbox_name" id="zekken" type="checkbox" disabled="disabled"
+                                            {% if member.zekken %} checked="checked"{% endif %}></td>
+                <td class="col-md-1"><input name="checkbox_name" id="jacket" type="checkbox" disabled="disabled"
+                                            {% if member.jacket %} checked="checked"{% endif %}></td>
+                <td class="col-md-1">{{ member.joined }}</td>
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
+</div>
+{% endblock %}

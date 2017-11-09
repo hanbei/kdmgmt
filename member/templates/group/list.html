@@ -1,0 +1,22 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-12">
+        <h1>Groups</h1>
+    </div>
+    <div class="col-md-12">
+        <ul>
+            {% if groups %}
+            {% for group in groups %}
+                <li>
+                    <a href="{% url 'member:group_detail' group.id %}">{{ group.name }}</a>
+                </li>
+            {% endfor %}
+            {% else %}
+            <p>No groups are available.</p>
+            {% endif %}
+        </ul>
+    </div>
+</div>
+{% endblock %}
