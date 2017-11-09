@@ -2,13 +2,14 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import HttpResponse
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.template import loader
 from django.urls import reverse, reverse_lazy
 from django.views import generic
 
 # Create your views here.
 from .models import Member, Group
+
 
 @login_required
 def export_group_to_csv(request, group_id):
@@ -72,7 +73,7 @@ def group_list_view(request):
     return render(request, 'group/list.html', {'groups': groups})
 
 
-class GroupDetailView(LoginRequiredMixin, generic.DetailView):
-    model = Group
-    template_name = 'group/detail.html'
-    login_url = reverse_lazy('member:group_index')
+@login_required
+def group_detail_view(request, pk):
+    group = get_object_or_404(Group, pk=pk, users__id=request.user.id)
+    return render(request, 'group/detail.html', {'group': group})
