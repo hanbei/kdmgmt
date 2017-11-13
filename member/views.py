@@ -1,7 +1,8 @@
 from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import HttpResponse
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.template import loader
 from django.urls import reverse, reverse_lazy
 from django.views import generic
@@ -10,6 +11,7 @@ from django.views import generic
 from .models import Member, Group
 
 
+@login_required
 def export_group_to_csv(request, group_id):
     # Create the HttpResponse object with the appropriate CSV header.
     response = HttpResponse(content_type='text/csv')
@@ -35,7 +37,7 @@ def do_login(request):
         user = authenticate(request, username=username, password=password)
         if user is not None:
             login(request, user)
-            return redirect(reverse('member:group_index'))
+            return redirect(reverse('member:group_list'))
         else:
             return redirect(reverse('member:login'))
     else:
@@ -62,15 +64,16 @@ class MemberDetailView(LoginRequiredMixin, generic.DetailView):
     login_url = reverse_lazy('member:group_index')
 
 
-class GroupListView(LoginRequiredMixin, generic.ListView):
-    template_name = 'group/list.html'
-    context_object_name = 'groups'
-    login_url = reverse_lazy('member:login')
+@login_required
+def group_list_view(request):
+    if not request.user.is_authenticated:
+        return redirect('%s?next=%s' % (reverse_lazy('member:login'), request.path))
 
-    def get_queryset(self):
-        return Group.objects.order_by('name')
+    groups = Group.objects.filter(users__id=request.user.id).order_by('name')
+    return render(request, 'group/list.html', {'groups': groups})
 
-class GroupDetailView(LoginRequiredMixin, generic.DetailView):
-    model = Group
-    template_name = 'group/detail.html'
-    login_url = reverse_lazy('member:group_index')
+
+@login_required
+def group_detail_view(request, pk):
+    group = get_object_or_404(Group, pk=pk, users__id=request.user.id)
+    return render(request, 'group/detail.html', {'group': group})
