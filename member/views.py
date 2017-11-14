@@ -41,7 +41,7 @@ def do_login(request):
         else:
             return redirect(reverse('member:login'))
     else:
-        return render(request, 'member/login.html')
+        return render(request, 'login.html')
 
 
 def do_logout(request):
@@ -50,7 +50,7 @@ def do_logout(request):
 
 
 class MemberListView(LoginRequiredMixin, generic.ListView):
-    template_name = 'member/member_list.html'
+    template_name = 'member/list.html'
     context_object_name = 'members'
     login_url = reverse_lazy('member:login')
 
@@ -60,15 +60,12 @@ class MemberListView(LoginRequiredMixin, generic.ListView):
 
 class MemberDetailView(LoginRequiredMixin, generic.DetailView):
     model = Member
-    template_name = 'member/member_detail.html'
-    login_url = reverse_lazy('member:group_index')
+    template_name = 'member/detail.html'
+    login_url = reverse_lazy('member:group_list')
 
 
 @login_required
 def group_list_view(request):
-    if not request.user.is_authenticated:
-        return redirect('%s?next=%s' % (reverse_lazy('member:login'), request.path))
-
     groups = Group.objects.filter(users__id=request.user.id).order_by('name')
     return render(request, 'group/list.html', {'groups': groups})
 
